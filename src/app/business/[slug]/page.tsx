@@ -1,6 +1,5 @@
-"use client";
-
 import { notFound } from "next/navigation";
+import { businesses } from "@/data/businesses";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +8,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { getBusinessBySlug } from "@/data/businesses";
 import { getCryptosByIds } from "@/data/cryptocurrencies";
-import { motion } from "motion/react";
 import { 
   MapPin, 
   Clock, 
@@ -22,6 +20,13 @@ import {
   Navigation,
   Share2
 } from "lucide-react";
+
+// Generate static paths for all businesses
+export async function generateStaticParams() {
+  return businesses.map((business) => ({
+    slug: business.slug,
+  }));
+}
 
 export default function BusinessPage({ params }: { params: { slug: string } }) {
   const business = getBusinessBySlug(params.slug);
@@ -104,23 +109,15 @@ export default function BusinessPage({ params }: { params: { slug: string } }) {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
             {/* About Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
+            <div>
               <h2 className="text-2xl font-bold text-white mb-4">About</h2>
               <p className="text-lg text-gray-300 leading-relaxed">{business.description}</p>
-            </motion.div>
+            </div>
 
             <Separator className="bg-gray-800" />
 
             {/* Accepted Cryptocurrencies */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
+            <div>
               <h2 className="text-2xl font-bold text-white mb-4">Accepted Cryptocurrencies</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {acceptedCryptos.map((crypto) => (
@@ -140,16 +137,12 @@ export default function BusinessPage({ params }: { params: { slug: string } }) {
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
 
             {business.hours && (
               <>
                 <Separator className="bg-gray-800" />
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
-                >
+                <div>
                   <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
                     <Clock className="h-6 w-6" />
                     Hours of Operation
@@ -166,18 +159,13 @@ export default function BusinessPage({ params }: { params: { slug: string } }) {
                       </div>
                     </CardContent>
                   </Card>
-                </motion.div>
+                </div>
               </>
             )}
           </div>
 
           {/* Sidebar */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="space-y-6"
-          >
+          <div className="space-y-6">
             {/* Contact Card */}
             <Card className="bg-neutral-900 border-gray-800 sticky top-6">
               <CardContent className="p-6">
@@ -248,7 +236,7 @@ export default function BusinessPage({ params }: { params: { slug: string } }) {
                   </Button>
                   
                   {business.website && (
-                    <Button className="w-full" variant="outline" className="border-gray-700 text-white hover:bg-white hover:text-black" asChild>
+                    <Button className="w-full border-gray-700 text-white hover:bg-white hover:text-black" variant="outline" asChild>
                       <a 
                         href={business.website}
                         target="_blank"
@@ -262,7 +250,7 @@ export default function BusinessPage({ params }: { params: { slug: string } }) {
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         </div>
       </div>
     </div>
