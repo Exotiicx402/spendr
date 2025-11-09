@@ -1,13 +1,12 @@
 import { notFound } from "next/navigation";
-import { businesses } from "@/data/businesses";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { getBusinessBySlug } from "@/data/businesses";
-import { getCryptosByIds } from "@/data/cryptocurrencies";
+import { getBusinessBySlug, getAllBusinesses } from "@/lib/supabase-queries";
+import { getAllCryptocurrencies } from "@/lib/supabase-queries";
 import { 
   MapPin, 
   Clock, 
@@ -23,19 +22,25 @@ import {
 
 // Generate static paths for all businesses
 export async function generateStaticParams() {
+  const businesses = await getAllBusinesses();
   return businesses.map((business) => ({
     slug: business.slug,
   }));
 }
 
-export default function BusinessPage({ params }: { params: { slug: string } }) {
-  const business = getBusinessBySlug(params.slug);
+export default async function BusinessPage({ params }: { params: { slug: string } }) {
+  const [business, allCryptos] = await Promise.all([
+    getBusinessBySlug(params.slug),
+    getAllCryptocurrencies()
+  ]);
 
   if (!business) {
     notFound();
   }
 
-  const acceptedCryptos = getCryptosByIds(business.acceptedCryptos);
+  const acceptedCryptos = allCryptos.filter(crypto => 
+    business.acceptedCryptos.includes(crypto.id)
+  );
 
   return (
     <div className="min-h-screen bg-black">

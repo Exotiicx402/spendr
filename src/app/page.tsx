@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { BusinessCardEnhanced } from "@/components/BusinessCardEnhanced";
-import { businesses } from "@/data/businesses";
+import { getAllBusinesses } from "@/lib/supabase-queries";
 import { ArrowRight, MapPin } from "lucide-react";
 import { BeamsBackground } from "@/components/ui/beams-background";
 import { motion } from "motion/react";
@@ -12,14 +12,16 @@ import { getUserLocation, sortBusinessesByDistance } from "@/lib/geolocation";
 import { Business } from "@/types";
 
 export default function Home() {
-  const [nearbyBusinesses, setNearbyBusinesses] = useState<Business[]>(businesses.slice(0, 3));
+  const [nearbyBusinesses, setNearbyBusinesses] = useState<Business[]>([]);
   const [userLocation, setUserLocation] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchLocation() {
+    async function fetchData() {
+      const businesses = await getAllBusinesses();
       const location = await getUserLocation();
-      if (location) {
+      
+      if (location && businesses.length > 0) {
         const sorted = sortBusinessesByDistance(
           businesses,
           location.latitude,
@@ -27,10 +29,12 @@ export default function Home() {
         );
         setNearbyBusinesses(sorted.slice(0, 3));
         setUserLocation(location.city && location.region ? `${location.city}, ${location.region}` : null);
+      } else {
+        setNearbyBusinesses(businesses.slice(0, 3));
       }
       setIsLoading(false);
     }
-    fetchLocation();
+    fetchData();
   }, []);
   
   return (

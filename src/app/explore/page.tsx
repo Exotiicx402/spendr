@@ -1,8 +1,9 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { BusinessCardEnhanced } from "@/components/BusinessCardEnhanced";
-import { businesses } from "@/data/businesses";
-import { cryptocurrencies } from "@/data/cryptocurrencies";
+import { getAllBusinesses, getAllCryptocurrencies } from "@/lib/supabase-queries";
+import { Business, Cryptocurrency } from "@/types";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,23 @@ import { Separator } from "@/components/ui/separator";
 import { Search, Filter, MapPin, Star } from "lucide-react";
 
 export default function ExplorePage() {
+  const [businesses, setBusinesses] = useState<Business[]>([]);
+  const [cryptocurrencies, setCryptocurrencies] = useState<Cryptocurrency[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      const [businessesData, cryptosData] = await Promise.all([
+        getAllBusinesses(),
+        getAllCryptocurrencies()
+      ]);
+      setBusinesses(businessesData);
+      setCryptocurrencies(cryptosData);
+      setIsLoading(false);
+    }
+    fetchData();
+  }, []);
+
   return (
     <div className="min-h-screen bg-black">
       <div className="flex">
