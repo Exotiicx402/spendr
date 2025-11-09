@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { getBusinessBySlug, getAllBusinesses } from "@/lib/supabase-queries";
+import { getBusinessBySlug } from "@/lib/supabase-queries";
 import { getAllCryptocurrencies } from "@/lib/supabase-queries";
 import { 
   MapPin, 
@@ -20,13 +20,8 @@ import {
   Share2
 } from "lucide-react";
 
-// Generate static paths for all businesses
-export async function generateStaticParams() {
-  const businesses = await getAllBusinesses();
-  return businesses.map((business) => ({
-    slug: business.slug,
-  }));
-}
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
 
 export default async function BusinessPage({ params }: { params: { slug: string } }) {
   const [business, allCryptos] = await Promise.all([

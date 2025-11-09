@@ -18,6 +18,7 @@ export async function getAllBusinesses(): Promise<Business[]> {
     return [];
   }
 
+  console.log('Fetched businesses from Supabase:', data?.length || 0);
   return data.map(formatBusinessData);
 }
 
