@@ -7,7 +7,7 @@ export const businesses: Business[] = [
     slug: "crypto-coffee-house",
     description: "Artisanal coffee shop accepting major cryptocurrencies. Enjoy your favorite brew while spending your digital assets.",
     category: "Food & Beverage",
-    image: "/hero-business.jpg",
+    image: "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=800&q=80",
     location: {
       address: "123 Main St",
       city: "San Francisco",
@@ -39,7 +39,7 @@ export const businesses: Business[] = [
     slug: "digital-eats",
     description: "Modern restaurant embracing the future of payments. Farm-to-table cuisine with cryptocurrency payment options.",
     category: "Food & Beverage",
-    image: "/hero-business.jpg",
+    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80",
     location: {
       address: "456 Market St",
       city: "San Francisco",
@@ -71,7 +71,7 @@ export const businesses: Business[] = [
     slug: "tech-haven",
     description: "Electronics store accepting crypto. Latest gadgets and tech accessories available for digital currency.",
     category: "Electronics",
-    image: "/hero-business.jpg",
+    image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=800&q=80",
     location: {
       address: "789 Tech Blvd",
       city: "Austin",
