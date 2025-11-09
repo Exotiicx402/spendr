@@ -1,14 +1,20 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Coins } from "lucide-react";
 
 export function Header() {
   return (
     <header className="border-b border-gray-800 bg-black">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 text-2xl font-bold text-white">
-          <Coins className="h-8 w-8" />
-          <span>Spendr</span>
+        <Link href="/" className="flex items-center">
+          <Image 
+            src="/spendr-logo.png" 
+            alt="Spendr" 
+            width={120} 
+            height={40}
+            className="h-8 w-auto"
+            priority
+          />
         </Link>
         
         <nav className="hidden md:flex items-center gap-6">
