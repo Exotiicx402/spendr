@@ -1,17 +1,39 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BusinessCardEnhanced } from "@/components/BusinessCardEnhanced";
-import { getFeaturedBusinesses } from "@/data/businesses";
+import { businesses } from "@/data/businesses";
 import { cryptocurrencies } from "@/data/cryptocurrencies";
 import { ArrowRight, Search, MapPin, Shield } from "lucide-react";
 import { BeamsBackground } from "@/components/ui/beams-background";
 import { motion } from "motion/react";
+import { getUserLocation, sortBusinessesByDistance } from "@/lib/geolocation";
+import { Business } from "@/types";
 
 export default function Home() {
-  const featuredBusinesses = getFeaturedBusinesses();
+  const [nearbyBusinesses, setNearbyBusinesses] = useState<Business[]>(businesses.slice(0, 3));
+  const [userLocation, setUserLocation] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchLocation() {
+      const location = await getUserLocation();
+      if (location) {
+        const sorted = sortBusinessesByDistance(
+          businesses,
+          location.latitude,
+          location.longitude
+        );
+        setNearbyBusinesses(sorted.slice(0, 3));
+        setUserLocation(location.city && location.region ? `${location.city}, ${location.region}` : null);
+      }
+      setIsLoading(false);
+    }
+    fetchLocation();
+  }, []);
   
   return (
     <div className="bg-black">
@@ -98,22 +120,36 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Businesses */}
+      {/* Closest Businesses */}
       <section className="py-20 bg-neutral-900">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold text-white">Featured Businesses</h2>
+            <div>
+              <h2 className="text-3xl font-bold text-white mb-2">Closest to You</h2>
+              {userLocation && (
+                <p className="text-gray-400 flex items-center gap-2">
+                  <MapPin className="w-4 h-4" />
+                  {userLocation}
+                </p>
+              )}
+            </div>
             <Button variant="outline" className="border-gray-600 text-white hover:bg-white hover:text-black" asChild>
               <Link href="/explore">
                 View All <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredBusinesses.map((business) => (
-              <BusinessCardEnhanced key={business.id} business={business} />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="text-center py-12">
+              <p className="text-gray-400">Finding businesses near you...</p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {nearbyBusinesses.map((business) => (
+                <BusinessCardEnhanced key={business.id} business={business} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
