@@ -3,11 +3,9 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { BusinessCardEnhanced } from "@/components/BusinessCardEnhanced";
 import { businesses } from "@/data/businesses";
-import { cryptocurrencies } from "@/data/cryptocurrencies";
-import { ArrowRight, Search, MapPin, Shield } from "lucide-react";
+import { ArrowRight, MapPin } from "lucide-react";
 import { BeamsBackground } from "@/components/ui/beams-background";
 import { motion } from "motion/react";
 import { getUserLocation, sortBusinessesByDistance } from "@/lib/geolocation";
@@ -85,41 +83,6 @@ export default function Home() {
         </div>
       </BeamsBackground>
 
-      {/* Features Section */}
-      <section className="py-20 bg-black">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="bg-black w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Search className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="font-semibold text-lg mb-2 text-white">Easy Discovery</h3>
-              <p className="text-gray-400">
-                Search and filter businesses by location, category, and accepted cryptocurrencies.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="bg-black w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <MapPin className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="font-semibold text-lg mb-2 text-white">Local Businesses</h3>
-              <p className="text-gray-400">
-                Find crypto-friendly businesses in your area and support local commerce.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="bg-black w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Shield className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="font-semibold text-lg mb-2 text-white">Verified Listings</h3>
-              <p className="text-gray-400">
-                All businesses are verified to ensure they truly accept cryptocurrency.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Closest Businesses */}
       <section className="py-20 bg-neutral-900">
         <div className="container mx-auto px-4">
@@ -153,38 +116,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Popular Cryptocurrencies */}
-      <section className="py-20 bg-black">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8 text-white">
-            Popular Cryptocurrencies
-          </h2>
-          <div className="flex flex-wrap justify-center gap-4">
-            {cryptocurrencies.map((crypto) => (
-              <Badge key={crypto.id} variant="outline" className="text-lg py-2 px-4 border-gray-600 text-white hover:bg-white hover:text-black">
-                {crypto.symbol} - {crypto.name}
-              </Badge>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-black text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold mb-4">
-            Accept Crypto at Your Business?
-          </h2>
-          <p className="text-xl mb-8 text-gray-300">
-            Join our growing network of crypto-friendly businesses and reach new customers.
-          </p>
-          <Button size="lg" className="bg-white text-black hover:bg-gray-200" asChild>
-            <Link href="/for-businesses">
-              Get Listed Today <ArrowRight className="ml-2 h-5 w-5" />
-            </Link>
-          </Button>
-        </div>
-      </section>
     </div>
   );
 }
