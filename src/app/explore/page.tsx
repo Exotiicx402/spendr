@@ -30,9 +30,9 @@ export default function ExplorePage() {
 
   return (
     <div className="min-h-screen bg-black">
-      <div className="flex">
-        {/* Fixed Left Sidebar - Search & Filters */}
-        <aside className="w-80 min-h-screen border-r border-gray-800 bg-black sticky top-0 p-6 overflow-y-auto">
+      <div className="flex flex-col lg:flex-row">
+        {/* Fixed Left Sidebar - Search & Filters (Desktop) / Top Section (Mobile) */}
+        <aside className="w-full lg:w-80 lg:min-h-screen border-b lg:border-b-0 lg:border-r border-gray-800 bg-black lg:sticky lg:top-0 p-6 overflow-y-auto">
           <div className="space-y-6">
             {/* Header */}
             <div>
