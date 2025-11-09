@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { BusinessCard } from "@/components/BusinessCard";
+import { BusinessCardEnhanced } from "@/components/BusinessCardEnhanced";
 import { getFeaturedBusinesses } from "@/data/businesses";
 import { cryptocurrencies } from "@/data/cryptocurrencies";
 import { ArrowRight, Search, MapPin, Shield } from "lucide-react";
@@ -111,7 +111,7 @@ export default function Home() {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {featuredBusinesses.map((business) => (
-              <BusinessCard key={business.id} business={business} />
+              <BusinessCardEnhanced key={business.id} business={business} />
             ))}
           </div>
         </div>
