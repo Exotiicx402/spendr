@@ -27,7 +27,7 @@ export function Header() {
         </nav>
         
         <div className="flex items-center gap-2">
-          <Button variant="outline" className="border-gray-600 text-white hover:bg-white hover:text-black" asChild>
+          <Button variant="outline" className="border-gray-600 text-black bg-white hover:bg-gray-200" asChild>
             <Link href="/for-businesses">List Your Business</Link>
           </Button>
         </div>

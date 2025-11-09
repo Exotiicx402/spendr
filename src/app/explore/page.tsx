@@ -77,7 +77,7 @@ export default function ExplorePage() {
                   <Badge
                     key={crypto.id}
                     variant="outline"
-                    className="border-gray-700 text-gray-400 hover:bg-white hover:text-black cursor-pointer"
+                className="border-gray-700 text-black bg-white hover:bg-gray-200 cursor-pointer"
                   >
                     {crypto.symbol}
                   </Badge>
@@ -109,7 +109,7 @@ export default function ExplorePage() {
             {/* Clear Filters */}
             <Button
               variant="outline"
-              className="w-full border-gray-700 text-gray-400 hover:bg-white hover:text-black"
+              className="w-full border-gray-700 text-black bg-white hover:bg-gray-200"
             >
               Clear All Filters
             </Button>
@@ -127,7 +127,7 @@ export default function ExplorePage() {
               <Button
                 variant="outline"
                 size="sm"
-                className="border-gray-700 text-gray-400 hover:bg-white hover:text-black"
+                className="border-gray-700 text-black bg-white hover:bg-gray-200"
               >
                 <Filter className="w-4 h-4 mr-2" />
                 Sort by

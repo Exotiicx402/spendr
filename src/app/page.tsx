@@ -59,7 +59,7 @@ export default function Home() {
                         Explore Businesses <ArrowRight className="ml-2 h-5 w-5" />
                       </Link>
                     </Button>
-                    <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-black" asChild>
+              <Button size="lg" variant="outline" className="border-white text-black bg-white hover:bg-gray-200" asChild>
                       <Link href="/for-businesses">List Your Business</Link>
                     </Button>
                   </div>
@@ -96,7 +96,7 @@ export default function Home() {
                 </p>
               )}
             </div>
-            <Button variant="outline" className="border-gray-600 text-white hover:bg-white hover:text-black" asChild>
+            <Button variant="outline" className="border-gray-600 text-black bg-white hover:bg-gray-200" asChild>
               <Link href="/explore">
                 View All <ArrowRight className="ml-2 h-4 w-4" />
               </Link>

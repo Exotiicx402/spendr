@@ -236,7 +236,7 @@ export default function BusinessPage({ params }: { params: { slug: string } }) {
                   </Button>
                   
                   {business.website && (
-                    <Button className="w-full border-gray-700 text-white hover:bg-white hover:text-black" variant="outline" asChild>
+                    <Button className="w-full border-gray-700 text-black bg-white hover:bg-gray-200" variant="outline" asChild>
                       <a 
                         href={business.website}
                         target="_blank"

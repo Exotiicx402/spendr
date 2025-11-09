@@ -151,7 +151,7 @@ export default function ForBusinessesPage() {
             <Button size="lg" className="bg-white text-black hover:bg-gray-200">
               List Your Business
             </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-black">
+            <Button size="lg" variant="outline" className="border-white text-black bg-white hover:bg-gray-200">
               Contact Sales
             </Button>
           </div>
