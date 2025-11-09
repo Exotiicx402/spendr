@@ -5,34 +5,36 @@ import { Search } from "lucide-react";
 
 export default function ExplorePage() {
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-4">Explore Businesses</h1>
-        <p className="text-lg text-muted-foreground mb-6">
+    <div className="min-h-screen bg-black">
+      <div className="container mx-auto px-4 py-12">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold mb-4 text-white">Explore Businesses</h1>
+          <p className="text-lg text-gray-400 mb-6">
           Discover crypto-friendly businesses in your area
         </p>
-        
-        <div className="relative max-w-md">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
-          <Input
-            type="text"
-            placeholder="Search by name, location, or category..."
-            className="pl-10"
-          />
+          
+          <div className="relative max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" />
+            <Input
+              type="text"
+              placeholder="Search by name, location, or category..."
+              className="pl-10 bg-neutral-900 border-gray-700 text-white placeholder:text-gray-500"
+            />
+          </div>
         </div>
-      </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {businesses.map((business) => (
-          <BusinessCard key={business.id} business={business} />
-        ))}
-      </div>
-
-      {businesses.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground">No businesses found</p>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {businesses.map((business) => (
+            <BusinessCard key={business.id} business={business} />
+          ))}
         </div>
-      )}
+
+        {businesses.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-400">No businesses found</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

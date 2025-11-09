@@ -5,7 +5,7 @@ import { Check, TrendingUp, Users, Zap } from "lucide-react";
 
 export default function ForBusinessesPage() {
   return (
-    <div>
+    <div className="bg-black">
       {/* Hero Section */}
       <section className="bg-black text-white py-20">
         <div className="container mx-auto px-4">
