@@ -27,10 +27,10 @@ export const BusinessCardEnhanced = React.forwardRef<HTMLAnchorElement, Business
         <Link
           ref={ref}
           href={`/business/${business.slug}`}
-          className="relative block h-[380px] rounded-2xl overflow-hidden group"
+          className="relative block h-[480px] rounded-2xl overflow-hidden group"
         >
           {/* Background Image */}
-          <div className="absolute inset-0 w-full h-2/4">
+          <div className="absolute inset-0 w-full h-3/5">
             <Image
               src={business.image}
               alt={business.name}
@@ -40,7 +40,7 @@ export const BusinessCardEnhanced = React.forwardRef<HTMLAnchorElement, Business
           </div>
 
           {/* Card Content */}
-          <div className="absolute bottom-0 left-0 right-0 h-2/4 bg-neutral-900 border-t border-gray-800 p-5 flex flex-col justify-between">
+          <div className="absolute bottom-0 left-0 right-0 h-2/5 bg-neutral-900 border-t border-gray-800 p-5 flex flex-col justify-between">
             <div className="space-y-2">
               {/* Category Tag */}
               <div className="flex items-center justify-between">
