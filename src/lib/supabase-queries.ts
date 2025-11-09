@@ -24,6 +24,7 @@ export async function getAllBusinesses(): Promise<Business[]> {
 
 // Fetch a single business by slug
 export async function getBusinessBySlug(slug: string): Promise<Business | null> {
+  console.log('Fetching business with slug:', slug);
   const { data, error } = await supabase
     .from('businesses')
     .select(`
@@ -37,9 +38,11 @@ export async function getBusinessBySlug(slug: string): Promise<Business | null> 
 
   if (error) {
     console.error('Error fetching business:', error);
+    console.error('Error details:', JSON.stringify(error, null, 2));
     return null;
   }
 
+  console.log('Found business:', data?.name);
   return formatBusinessData(data);
 }
 

@@ -23,9 +23,10 @@ import {
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
 
-export default async function BusinessPage({ params }: { params: { slug: string } }) {
+export default async function BusinessPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const [business, allCryptos] = await Promise.all([
-    getBusinessBySlug(params.slug),
+    getBusinessBySlug(slug),
     getAllCryptocurrencies()
   ]);
 
