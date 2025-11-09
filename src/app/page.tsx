@@ -17,39 +17,46 @@ export default function Home() {
     <div className="bg-black">
       {/* Hero Section with Beams Background */}
       <BeamsBackground intensity="medium">
-        <div className="relative z-10 flex min-h-screen w-full items-center justify-center">
+        <div className="relative z-10 flex min-h-screen w-full items-center">
           <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <motion.h1
-                className="text-6xl md:text-7xl lg:text-8xl font-bold mb-6 text-white tracking-tight"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+            <div className="grid lg:grid-cols-2 gap-8 items-center">
+              {/* Left Side - Liquid Glass Card */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8 }}
               >
-                Crypto spent beautifully.
-              </motion.h1>
-              <motion.p
-                className="text-xl md:text-2xl text-gray-300 mb-10 tracking-tight"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8 md:p-12 shadow-2xl">
+                  <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-white tracking-tight">
+                    Crypto spent beautifully.
+                  </h1>
+                  <p className="text-lg md:text-xl text-gray-200 mb-8 leading-relaxed">
+                    Discover businesses near you that accept cryptocurrency payments.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Button size="lg" className="bg-white text-black hover:bg-gray-200" asChild>
+                      <Link href="/explore">
+                        Explore Businesses <ArrowRight className="ml-2 h-5 w-5" />
+                      </Link>
+                    </Button>
+                    <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-black" asChild>
+                      <Link href="/for-businesses">List Your Business</Link>
+                    </Button>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Right Side - Open for Future Component */}
+              <motion.div
+                className="hidden lg:block"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
               >
-                Discover businesses near you that accept cryptocurrency payments.
-              </motion.p>
-              <motion.div
-                className="flex gap-4 justify-center flex-wrap"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-              >
-                <Button size="lg" className="bg-white text-black hover:bg-gray-200" asChild>
-                  <Link href="/explore">
-                    Explore Businesses <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-black" asChild>
-                  <Link href="/for-businesses">List Your Business</Link>
-                </Button>
+                {/* Placeholder for future component */}
+                <div className="h-full flex items-center justify-center">
+                  {/* Add your component here */}
+                </div>
               </motion.div>
             </div>
           </div>
