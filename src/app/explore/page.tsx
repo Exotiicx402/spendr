@@ -17,6 +17,12 @@ export default function ExplorePage() {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [sortBy, setSortBy] = useState<string>('featured');
   const [sortMenuOpen, setSortMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [locationQuery, setLocationQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedCryptos, setSelectedCryptos] = useState<string[]>([]);
+  const [selectedRating, setSelectedRating] = useState<number | null>(null);
+  const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -29,10 +35,79 @@ export default function ExplorePage() {
       setIsLoading(false);
     }
     fetchData();
+    
+    // Get user's geolocation
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+        },
+        () => {
+          console.log('Geolocation permission denied');
+        }
+      );
+    }
   }, []);
 
+  // Calculate distance from user location
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    const R = 3959; // Radius of Earth in miles
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+  };
+
+  // Filter businesses
+  const filteredBusinesses = businesses.filter(business => {
+    // Search query filter
+    if (searchQuery && !business.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+        !business.description.toLowerCase().includes(searchQuery.toLowerCase()) &&
+        !business.category.toLowerCase().includes(searchQuery.toLowerCase())) {
+      return false;
+    }
+    
+    // Location filter
+    if (locationQuery && 
+        !business.location.city.toLowerCase().includes(locationQuery.toLowerCase()) &&
+        !business.location.state.toLowerCase().includes(locationQuery.toLowerCase()) &&
+        !business.location.zip.includes(locationQuery)) {
+      return false;
+    }
+    
+    // Category filter
+    if (selectedCategory !== 'All' && business.category !== selectedCategory) {
+      return false;
+    }
+    
+    // Crypto filter
+    if (selectedCryptos.length > 0) {
+      const businessCryptoSymbols = cryptocurrencies
+        .filter(c => business.acceptedCryptos.includes(c.id))
+        .map(c => c.symbol);
+      const hasSelectedCrypto = selectedCryptos.some(selected => 
+        businessCryptoSymbols.includes(selected)
+      );
+      if (!hasSelectedCrypto) return false;
+    }
+    
+    // Rating filter
+    if (selectedRating !== null && (business.rating || 0) < selectedRating) {
+      return false;
+    }
+    
+    return true;
+  });
+
   // Sort businesses based on selected option
-  const sortedBusinesses = [...businesses].sort((a, b) => {
+  const sortedBusinesses = [...filteredBusinesses].sort((a, b) => {
     switch (sortBy) {
       case 'featured':
         return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
@@ -40,12 +115,27 @@ export default function ExplorePage() {
         return (b.rating || 0) - (a.rating || 0);
       case 'name':
         return a.name.localeCompare(b.name);
+      case 'distance':
+        if (!userLocation) return 0;
+        const distA = calculateDistance(userLocation.lat, userLocation.lng, 
+          a.location.coordinates.lat, a.location.coordinates.lng);
+        const distB = calculateDistance(userLocation.lat, userLocation.lng,
+          b.location.coordinates.lat, b.location.coordinates.lng);
+        return distA - distB;
       case 'newest':
         return 0; // Already sorted by created_at in query
       default:
         return 0;
     }
   });
+
+  const clearFilters = () => {
+    setSearchQuery('');
+    setLocationQuery('');
+    setSelectedCategory('All');
+    setSelectedCryptos([]);
+    setSelectedRating(null);
+  };
 
   return (
     <div className="min-h-screen bg-black">
@@ -73,6 +163,8 @@ export default function ExplorePage() {
                   type="text"
                   placeholder="Search businesses..."
                   className="pl-10 bg-gray-100 border-gray-300 text-black placeholder:text-gray-500"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
 
@@ -88,6 +180,8 @@ export default function ExplorePage() {
                   type="text"
                   placeholder="City, State, or ZIP"
                   className="bg-gray-100 border-gray-300 text-black placeholder:text-gray-500"
+                  value={locationQuery}
+                  onChange={(e) => setLocationQuery(e.target.value)}
                 />
               </div>
 
@@ -101,7 +195,10 @@ export default function ExplorePage() {
                     <Button
                       key={category}
                       variant="ghost"
-                      className="w-full justify-start text-gray-700 hover:text-black hover:bg-gray-100"
+                      className={`w-full justify-start hover:text-black hover:bg-gray-100 ${
+                        selectedCategory === category ? 'text-black bg-gray-100 font-semibold' : 'text-gray-700'
+                      }`}
+                      onClick={() => setSelectedCategory(category)}
                     >
                       {category}
                     </Button>
@@ -119,7 +216,18 @@ export default function ExplorePage() {
                     <Badge
                       key={crypto.id}
                       variant="outline"
-                      className="border-gray-300 text-black bg-white hover:bg-gray-100 cursor-pointer"
+                      className={`border-gray-300 cursor-pointer ${
+                        selectedCryptos.includes(crypto.symbol)
+                          ? 'bg-black text-white'
+                          : 'text-black bg-white hover:bg-gray-100'
+                      }`}
+                      onClick={() => {
+                        if (selectedCryptos.includes(crypto.symbol)) {
+                          setSelectedCryptos(selectedCryptos.filter(s => s !== crypto.symbol));
+                        } else {
+                          setSelectedCryptos([...selectedCryptos, crypto.symbol]);
+                        }
+                      }}
                     >
                       {crypto.symbol}
                     </Badge>
@@ -136,15 +244,21 @@ export default function ExplorePage() {
                   Minimum Rating
                 </h3>
                 <div className="space-y-2">
-                  {["4.5+", "4.0+", "3.5+", "3.0+", "Any"].map((rating) => (
-                    <Button
-                      key={rating}
-                      variant="ghost"
-                      className="w-full justify-start text-gray-700 hover:text-black hover:bg-gray-100"
-                    >
-                      {rating}
-                    </Button>
-                  ))}
+                  {["4.5+", "4.0+", "3.5+", "3.0+", "Any"].map((rating) => {
+                    const ratingValue = rating === "Any" ? null : parseFloat(rating);
+                    return (
+                      <Button
+                        key={rating}
+                        variant="ghost"
+                        className={`w-full justify-start hover:text-black hover:bg-gray-100 ${
+                          selectedRating === ratingValue ? 'text-black bg-gray-100 font-semibold' : 'text-gray-700'
+                        }`}
+                        onClick={() => setSelectedRating(ratingValue)}
+                      >
+                        {rating}
+                      </Button>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -152,6 +266,7 @@ export default function ExplorePage() {
               <Button
                 variant="outline"
                 className="w-full border-gray-300 text-black bg-white hover:bg-gray-100"
+                onClick={clearFilters}
               >
                 Clear All Filters
               </Button>
@@ -177,6 +292,8 @@ export default function ExplorePage() {
                 type="text"
                 placeholder="Search businesses..."
                 className="pl-10 bg-neutral-900 border-gray-700 text-white placeholder:text-gray-500"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
 
@@ -192,6 +309,8 @@ export default function ExplorePage() {
                 type="text"
                 placeholder="City, State, or ZIP"
                 className="bg-neutral-900 border-gray-700 text-white placeholder:text-gray-500"
+                value={locationQuery}
+                onChange={(e) => setLocationQuery(e.target.value)}
               />
             </div>
 
@@ -205,7 +324,10 @@ export default function ExplorePage() {
                   <Button
                     key={category}
                     variant="ghost"
-                    className="w-full justify-start text-gray-400 hover:text-white hover:bg-neutral-900"
+                    className={`w-full justify-start hover:text-white hover:bg-neutral-900 ${
+                      selectedCategory === category ? 'text-white bg-neutral-900 font-semibold' : 'text-gray-400'
+                    }`}
+                    onClick={() => setSelectedCategory(category)}
                   >
                     {category}
                   </Button>
@@ -223,7 +345,18 @@ export default function ExplorePage() {
                   <Badge
                     key={crypto.id}
                     variant="outline"
-                className="border-gray-700 text-black bg-white hover:bg-gray-200 cursor-pointer"
+                    className={`border-gray-700 cursor-pointer ${
+                      selectedCryptos.includes(crypto.symbol)
+                        ? 'bg-white text-black font-semibold'
+                        : 'text-black bg-white/50 hover:bg-white'
+                    }`}
+                    onClick={() => {
+                      if (selectedCryptos.includes(crypto.symbol)) {
+                        setSelectedCryptos(selectedCryptos.filter(s => s !== crypto.symbol));
+                      } else {
+                        setSelectedCryptos([...selectedCryptos, crypto.symbol]);
+                      }
+                    }}
                   >
                     {crypto.symbol}
                   </Badge>
@@ -240,15 +373,21 @@ export default function ExplorePage() {
                 Minimum Rating
               </h3>
               <div className="space-y-2">
-                {["4.5+", "4.0+", "3.5+", "3.0+", "Any"].map((rating) => (
-                  <Button
-                    key={rating}
-                    variant="ghost"
-                    className="w-full justify-start text-gray-400 hover:text-white hover:bg-neutral-900"
-                  >
-                    {rating}
-                  </Button>
-                ))}
+                {["4.5+", "4.0+", "3.5+", "3.0+", "Any"].map((rating) => {
+                  const ratingValue = rating === "Any" ? null : parseFloat(rating);
+                  return (
+                    <Button
+                      key={rating}
+                      variant="ghost"
+                      className={`w-full justify-start hover:text-white hover:bg-neutral-900 ${
+                        selectedRating === ratingValue ? 'text-white bg-neutral-900 font-semibold' : 'text-gray-400'
+                      }`}
+                      onClick={() => setSelectedRating(ratingValue)}
+                    >
+                      {rating}
+                    </Button>
+                  );
+                })}
               </div>
             </div>
 
@@ -256,6 +395,7 @@ export default function ExplorePage() {
             <Button
               variant="outline"
               className="w-full border-gray-700 text-black bg-white hover:bg-gray-200"
+              onClick={clearFilters}
             >
               Clear All Filters
             </Button>
@@ -268,7 +408,7 @@ export default function ExplorePage() {
             {/* Results Header */}
             <div className="mb-6 flex items-center justify-between">
               <p className="text-gray-400">
-                Showing <span className="text-white font-semibold">{businesses.length}</span> businesses
+                Showing <span className="text-white font-semibold">{sortedBusinesses.length}</span> of {businesses.length} businesses
               </p>
               <div className="relative">
                 <Button
@@ -286,6 +426,7 @@ export default function ExplorePage() {
                       {[
                         { value: 'featured', label: 'Featured' },
                         { value: 'rating', label: 'Highest Rated' },
+                        { value: 'distance', label: 'Nearest to Me' },
                         { value: 'name', label: 'Name (A-Z)' },
                         { value: 'newest', label: 'Newest' },
                       ].map((option) => (
