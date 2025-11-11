@@ -123,11 +123,11 @@ export default async function BusinessPage({ params }: { params: Promise<{ slug:
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {acceptedCryptos.map((crypto) => {
                   const logoMap: Record<string, string> = {
-                    'BTC': 'https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=040',
-                    'ETH': 'https://cryptologos.cc/logos/ethereum-eth-logo.png?v=040',
-                    'USDT': 'https://cryptologos.cc/logos/tether-usdt-logo.png?v=040',
-                    'USDC': 'https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=040',
-                    'SOL': 'https://cryptologos.cc/logos/solana-sol-logo.png?v=040',
+                    'BTC': 'https://res.cloudinary.com/dy1nbfg5g/image/upload/v1762889478/bitcoin-btc-logo_imydfk.svg',
+                    'ETH': 'https://res.cloudinary.com/dy1nbfg5g/image/upload/v1762889478/ethereum-eth-logo_ehwtkf.svg',
+                    'USDT': 'https://res.cloudinary.com/dy1nbfg5g/image/upload/v1762889478/tether-usdt-logo_kxyj7a.svg',
+                    'USDC': 'https://res.cloudinary.com/dy1nbfg5g/image/upload/v1762889478/usd-coin-usdc-logo_omy1lm.svg',
+                    'SOL': 'https://res.cloudinary.com/dy1nbfg5g/image/upload/v1762889478/solana-sol-logo_x844er.svg',
                   };
                   const logoUrl = logoMap[crypto.symbol];
                   
