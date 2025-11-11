@@ -11,7 +11,7 @@ interface BusinessGlobeProps {
 }
 
 export function BusinessGlobe({ businesses }: BusinessGlobeProps) {
-  const globeEl = useRef<any>();
+  const globeEl = useRef<any>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
