@@ -8,12 +8,13 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Search, Filter, MapPin, Star } from "lucide-react";
+import { Search, Filter, MapPin, Star, ChevronDown } from "lucide-react";
 
 export default function ExplorePage() {
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [cryptocurrencies, setCryptocurrencies] = useState<Cryptocurrency[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -31,8 +32,117 @@ export default function ExplorePage() {
   return (
     <div className="min-h-screen bg-black">
       <div className="flex flex-col lg:flex-row">
-        {/* Fixed Left Sidebar - Search & Filters (Desktop) / Top Section (Mobile) */}
-        <aside className="w-full lg:w-80 lg:min-h-screen border-b lg:border-b-0 lg:border-r border-gray-800 bg-black lg:sticky lg:top-0 p-6 overflow-y-auto">
+        {/* Mobile Collapsible Filters */}
+        <div className="lg:hidden bg-white border-b border-gray-200">
+          <button
+            onClick={() => setFiltersOpen(!filtersOpen)}
+            className="w-full px-6 py-4 flex items-center justify-between text-black font-semibold"
+          >
+            <span className="flex items-center gap-2">
+              <Filter className="w-5 h-5" />
+              Filters
+            </span>
+            <ChevronDown 
+              className={`w-5 h-5 transition-transform duration-300 ${filtersOpen ? 'rotate-180' : ''}`}
+            />
+          </button>
+          {filtersOpen && (
+            <div className="px-6 pb-6 space-y-6">
+              {/* Search */}
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-4 w-4" />
+                <Input
+                  type="text"
+                  placeholder="Search businesses..."
+                  className="pl-10 bg-gray-100 border-gray-300 text-black placeholder:text-gray-500"
+                />
+              </div>
+
+              <Separator className="bg-gray-200" />
+
+              {/* Location Filter */}
+              <div>
+                <h3 className="text-sm font-semibold text-black mb-3 flex items-center">
+                  <MapPin className="w-4 h-4 mr-2" />
+                  Location
+                </h3>
+                <Input
+                  type="text"
+                  placeholder="City, State, or ZIP"
+                  className="bg-gray-100 border-gray-300 text-black placeholder:text-gray-500"
+                />
+              </div>
+
+              <Separator className="bg-gray-200" />
+
+              {/* Category Filter */}
+              <div>
+                <h3 className="text-sm font-semibold text-black mb-3">Category</h3>
+                <div className="space-y-2">
+                  {["All", "Food & Beverage", "Retail", "Services", "Entertainment", "Healthcare"].map((category) => (
+                    <Button
+                      key={category}
+                      variant="ghost"
+                      className="w-full justify-start text-gray-700 hover:text-black hover:bg-gray-100"
+                    >
+                      {category}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              <Separator className="bg-gray-200" />
+
+              {/* Cryptocurrency Filter */}
+              <div>
+                <h3 className="text-sm font-semibold text-black mb-3">Accepted Crypto</h3>
+                <div className="flex flex-wrap gap-2">
+                  {cryptocurrencies.map((crypto) => (
+                    <Badge
+                      key={crypto.id}
+                      variant="outline"
+                      className="border-gray-300 text-black bg-white hover:bg-gray-100 cursor-pointer"
+                    >
+                      {crypto.symbol}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+
+              <Separator className="bg-gray-200" />
+
+              {/* Rating Filter */}
+              <div>
+                <h3 className="text-sm font-semibold text-black mb-3 flex items-center">
+                  <Star className="w-4 h-4 mr-2" />
+                  Minimum Rating
+                </h3>
+                <div className="space-y-2">
+                  {["4.5+", "4.0+", "3.5+", "3.0+", "Any"].map((rating) => (
+                    <Button
+                      key={rating}
+                      variant="ghost"
+                      className="w-full justify-start text-gray-700 hover:text-black hover:bg-gray-100"
+                    >
+                      {rating}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Clear Filters */}
+              <Button
+                variant="outline"
+                className="w-full border-gray-300 text-black bg-white hover:bg-gray-100"
+              >
+                Clear All Filters
+              </Button>
+            </div>
+          )}
+        </div>
+
+        {/* Desktop Sidebar - Search & Filters */}
+        <aside className="hidden lg:block w-80 min-h-screen border-r border-gray-800 bg-black sticky top-0 p-6 overflow-y-auto">
           <div className="space-y-6">
             {/* Header */}
             <div>
