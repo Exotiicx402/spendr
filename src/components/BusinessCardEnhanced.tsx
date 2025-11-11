@@ -74,14 +74,24 @@ export const BusinessCardEnhanced = React.forwardRef<HTMLAnchorElement, Business
               
               {/* Crypto badges */}
               <div className="flex items-center gap-1">
-                {acceptedCryptos.slice(0, 3).map((crypto) => (
-                  <span
-                    key={crypto.id}
-                    className="text-xs px-2 py-1 bg-white/10 text-white rounded"
-                  >
-                    {crypto.symbol}
-                  </span>
-                ))}
+                {acceptedCryptos.slice(0, 3).map((crypto) => {
+                  const colorMap: Record<string, string> = {
+                    'BTC': '#f7931a',
+                    'ETH': '#497493',
+                    'USDT': '#2ea07b',
+                    'USDC': '#2775ca',
+                  };
+                  const bgColor = colorMap[crypto.symbol] || '#ffffff20';
+                  return (
+                    <span
+                      key={crypto.id}
+                      className="text-xs px-2 py-1 text-white rounded font-medium"
+                      style={{ backgroundColor: bgColor }}
+                    >
+                      {crypto.symbol}
+                    </span>
+                  );
+                })}
                 {business.acceptedCryptos.length > 3 && (
                   <span className="text-xs px-2 py-1 bg-white/10 text-white rounded">
                     +{business.acceptedCryptos.length - 3}
