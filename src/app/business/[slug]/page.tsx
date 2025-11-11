@@ -34,6 +34,8 @@ export default function BusinessPage({ params }: { params: Promise<{ slug: strin
   ]));
 
   const handleShare = async () => {
+    if (!business) return;
+    
     const url = window.location.href;
     
     if (navigator.share) {
