@@ -143,7 +143,7 @@ export default async function BusinessPage({ params }: { params: Promise<{ slug:
                             alt={crypto.symbol}
                             width={40}
                             height={40}
-                            className="w-10 h-10 rounded-full"
+                            className="w-10 h-10"
                           />
                         ) : (
                           <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
