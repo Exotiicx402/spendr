@@ -121,22 +121,43 @@ export default async function BusinessPage({ params }: { params: Promise<{ slug:
             <div>
               <h2 className="text-2xl font-bold text-white mb-4">Accepted Cryptocurrencies</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {acceptedCryptos.map((crypto) => (
-                  <div
-                    key={crypto.id}
-                    className="bg-neutral-900 border border-gray-800 rounded-xl p-4 hover:border-white/20 transition-colors"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-                        <span className="text-lg font-bold text-white">{crypto.symbol.charAt(0)}</span>
-                      </div>
-                      <div>
-                        <p className="font-semibold text-white">{crypto.symbol}</p>
-                        <p className="text-xs text-gray-400">{crypto.name}</p>
+                {acceptedCryptos.map((crypto) => {
+                  const logoMap: Record<string, string> = {
+                    'BTC': 'https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=040',
+                    'ETH': 'https://cryptologos.cc/logos/ethereum-eth-logo.png?v=040',
+                    'USDT': 'https://cryptologos.cc/logos/tether-usdt-logo.png?v=040',
+                    'USDC': 'https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=040',
+                    'SOL': 'https://cryptologos.cc/logos/solana-sol-logo.png?v=040',
+                  };
+                  const logoUrl = logoMap[crypto.symbol];
+                  
+                  return (
+                    <div
+                      key={crypto.id}
+                      className="bg-neutral-900 border border-gray-800 rounded-xl p-4 hover:border-white/20 transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        {logoUrl ? (
+                          <Image
+                            src={logoUrl}
+                            alt={crypto.symbol}
+                            width={40}
+                            height={40}
+                            className="w-10 h-10 rounded-full"
+                          />
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+                            <span className="text-lg font-bold text-white">{crypto.symbol.charAt(0)}</span>
+                          </div>
+                        )}
+                        <div>
+                          <p className="font-semibold text-white">{crypto.symbol}</p>
+                          <p className="text-xs text-gray-400">{crypto.name}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
