@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -19,6 +20,9 @@ import {
   Navigation,
   Share2
 } from "lucide-react";
+
+const Map = dynamic(() => import("react-map-gl").then(mod => mod.default), { ssr: false });
+const Marker = dynamic(() => import("react-map-gl").then(mod => mod.Marker), { ssr: false });
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -165,25 +169,73 @@ export default async function BusinessPage({ params }: { params: Promise<{ slug:
               <>
                 <Separator className="bg-gray-800" />
                 <div>
-                  <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                    <Clock className="h-6 w-6" />
-                    Hours of Operation
-                  </h2>
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                      <Clock className="h-6 w-6" />
+                      Hours of Operation
+                    </h2>
+                    {(() => {
+                      const now = new Date();
+                      const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+                      const today = dayNames[now.getDay()];
+                      const currentHours = business.hours[today as keyof typeof business.hours];
+                      const isOpen = currentHours && currentHours !== 'Closed';
+                      return (
+                        <Badge className={isOpen ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}>
+                          {isOpen ? 'Open Now' : 'Closed'}
+                        </Badge>
+                      );
+                    })()}
+                  </div>
                   <Card className="bg-neutral-900 border-gray-800">
                     <CardContent className="p-6">
                       <div className="space-y-3">
-                        {Object.entries(business.hours).map(([day, hours]) => (
-                          <div key={day} className="flex justify-between items-center">
-                            <span className="font-medium text-white">{day}</span>
-                            <span className="text-gray-400">{hours}</span>
-                          </div>
-                        ))}
+                        {Object.entries(business.hours).map(([day, hours]) => {
+                          const now = new Date();
+                          const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+                          const isToday = day.toLowerCase() === dayNames[now.getDay()];
+                          return (
+                            <div key={day} className={`flex justify-between items-center ${isToday ? 'font-bold' : ''}`}>
+                              <span className={`font-medium ${isToday ? 'text-white' : 'text-gray-300'}`}>
+                                {day.charAt(0).toUpperCase() + day.slice(1)}
+                              </span>
+                              <span className={isToday ? 'text-white' : 'text-gray-400'}>{hours}</span>
+                            </div>
+                          );
+                        })}
                       </div>
                     </CardContent>
                   </Card>
                 </div>
               </>
             )}
+
+            {/* Map Embed */}
+            <Separator className="bg-gray-800" />
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-4">Location</h2>
+              <div className="h-[300px] rounded-xl overflow-hidden border border-gray-800">
+                <Map
+                  mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN || 'pk.example'}
+                  initialViewState={{
+                    longitude: business.location.coordinates.lng,
+                    latitude: business.location.coordinates.lat,
+                    zoom: 14,
+                  }}
+                  style={{ width: '100%', height: '100%' }}
+                  mapStyle="mapbox://styles/mapbox/dark-v11"
+                >
+                  <Marker
+                    longitude={business.location.coordinates.lng}
+                    latitude={business.location.coordinates.lat}
+                  >
+                    <div className="w-8 h-8 bg-black border-2 border-white rounded-full flex items-center justify-center">
+                      <span className="text-white font-bold italic" style={{ fontFamily: 'Playfair Display, serif' }}>S</span>
+                    </div>
+                  </Marker>
+                </Map>
+              </div>
+            </div>
           </div>
 
           {/* Sidebar */}
@@ -210,7 +262,12 @@ export default async function BusinessPage({ params }: { params: Promise<{ slug:
                     <Phone className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
                       <div>
                         <p className="font-medium text-white">Phone</p>
-                        <p className="text-sm text-gray-400">{business.phone}</p>
+                        <a 
+                          href={`tel:${business.phone}`}
+                          className="text-sm text-blue-600 hover:underline"
+                        >
+                          {business.phone}
+                        </a>
                     </div>
                   </div>
                 )}
@@ -237,7 +294,12 @@ export default async function BusinessPage({ params }: { params: Promise<{ slug:
                     <Mail className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
                       <div>
                         <p className="font-medium text-white">Email</p>
-                        <p className="text-sm text-gray-400">{business.email}</p>
+                        <a 
+                          href={`mailto:${business.email}`}
+                          className="text-sm text-blue-600 hover:underline"
+                        >
+                          {business.email}
+                        </a>
                     </div>
                   </div>
                 )}
@@ -266,6 +328,24 @@ export default async function BusinessPage({ params }: { params: Promise<{ slug:
                       >
                         <Globe className="mr-2 h-4 w-4" />
                         Visit Website
+                      </a>
+                    </Button>
+                  )}
+                  
+                  {business.phone && (
+                    <Button className="w-full border-gray-700 text-black bg-white hover:bg-gray-200" variant="outline" asChild>
+                      <a href={`tel:${business.phone}`}>
+                        <Phone className="mr-2 h-4 w-4" />
+                        Call Now
+                      </a>
+                    </Button>
+                  )}
+                  
+                  {business.email && (
+                    <Button className="w-full border-gray-700 text-black bg-white hover:bg-gray-200" variant="outline" asChild>
+                      <a href={`mailto:${business.email}`}>
+                        <Mail className="mr-2 h-4 w-4" />
+                        Send Email
                       </a>
                     </Button>
                   )}
