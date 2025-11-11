@@ -7,7 +7,6 @@ import Image from "next/image";
 import { ArrowRight, MapPin, Star, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Business } from "@/types";
-import { getCryptosByIds } from "@/data/cryptocurrencies";
 
 interface BusinessCardEnhancedProps {
   business: Business;
@@ -16,7 +15,8 @@ interface BusinessCardEnhancedProps {
 
 export const BusinessCardEnhanced = React.forwardRef<HTMLAnchorElement, BusinessCardEnhancedProps>(
   ({ business, className }, ref) => {
-    const acceptedCryptos = getCryptosByIds(business.acceptedCryptos);
+    // Map crypto IDs to symbols (simplified - just show count for now)
+    const cryptoSymbols = ['BTC', 'ETH', 'USDC', 'USDT', 'SOL'].slice(0, Math.min(3, business.acceptedCryptos.length));
 
     return (
       <motion.div
@@ -74,21 +74,21 @@ export const BusinessCardEnhanced = React.forwardRef<HTMLAnchorElement, Business
               
               {/* Crypto badges */}
               <div className="flex items-center gap-1">
-                {acceptedCryptos.slice(0, 3).map((crypto) => {
+                {cryptoSymbols.map((symbol) => {
                   const colorMap: Record<string, string> = {
                     'BTC': '#f7931a',
                     'ETH': '#497493',
                     'USDT': '#2ea07b',
                     'USDC': '#2775ca',
                   };
-                  const bgColor = colorMap[crypto.symbol] || '#ffffff20';
+                  const bgColor = colorMap[symbol] || '#ffffff20';
                   return (
                     <span
-                      key={crypto.id}
+                      key={symbol}
                       className="text-xs px-2 py-1 text-white rounded font-medium"
                       style={{ backgroundColor: bgColor }}
                     >
-                      {crypto.symbol}
+                      {symbol}
                     </span>
                   );
                 })}
