@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { BusinessCardEnhanced } from "@/components/BusinessCardEnhanced";
 import { getAllBusinesses } from "@/lib/supabase-queries";
@@ -50,6 +51,18 @@ export default function Home() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8 }}
               >
+                {/* Mobile Logo - Centered above card */}
+                <div className="flex justify-center mb-8 lg:hidden">
+                  <Image 
+                    src="/spendr-logo.png" 
+                    alt="Spendr" 
+                    width={160} 
+                    height={53}
+                    className="h-10 w-auto"
+                    priority
+                  />
+                </div>
+                
                 <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8 md:p-12 shadow-2xl">
                   <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold italic mb-6 text-white tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
                     Crypto spent <span className="font-normal">beautifully.</span>
