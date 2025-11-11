@@ -15,6 +15,8 @@ export default function ExplorePage() {
   const [cryptocurrencies, setCryptocurrencies] = useState<Cryptocurrency[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [sortBy, setSortBy] = useState<string>('featured');
+  const [sortMenuOpen, setSortMenuOpen] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -28,6 +30,22 @@ export default function ExplorePage() {
     }
     fetchData();
   }, []);
+
+  // Sort businesses based on selected option
+  const sortedBusinesses = [...businesses].sort((a, b) => {
+    switch (sortBy) {
+      case 'featured':
+        return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
+      case 'rating':
+        return (b.rating || 0) - (a.rating || 0);
+      case 'name':
+        return a.name.localeCompare(b.name);
+      case 'newest':
+        return 0; // Already sorted by created_at in query
+      default:
+        return 0;
+    }
+  });
 
   return (
     <div className="min-h-screen bg-black">
@@ -252,19 +270,47 @@ export default function ExplorePage() {
               <p className="text-gray-400">
                 Showing <span className="text-white font-semibold">{businesses.length}</span> businesses
               </p>
-              <Button
-                variant="outline"
-                size="sm"
-                className="border-gray-700 text-black bg-white hover:bg-gray-200"
-              >
-                <Filter className="w-4 h-4 mr-2" />
-                Sort by
-              </Button>
+              <div className="relative">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-gray-700 text-black bg-white hover:bg-gray-200"
+                  onClick={() => setSortMenuOpen(!sortMenuOpen)}
+                >
+                  <Filter className="w-4 h-4 mr-2" />
+                  Sort by
+                </Button>
+                {sortMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                    <div className="py-1">
+                      {[
+                        { value: 'featured', label: 'Featured' },
+                        { value: 'rating', label: 'Highest Rated' },
+                        { value: 'name', label: 'Name (A-Z)' },
+                        { value: 'newest', label: 'Newest' },
+                      ].map((option) => (
+                        <button
+                          key={option.value}
+                          onClick={() => {
+                            setSortBy(option.value);
+                            setSortMenuOpen(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
+                            sortBy === option.value ? 'bg-gray-100 font-semibold' : ''
+                          }`}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Business Cards Grid - 2 columns */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {businesses.map((business) => (
+              {sortedBusinesses.map((business) => (
                 <BusinessCardEnhanced key={business.id} business={business} />
               ))}
             </div>
