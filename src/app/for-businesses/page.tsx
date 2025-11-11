@@ -16,8 +16,8 @@ export default function ForBusinessesPage() {
             <p className="text-xl text-gray-300 mb-8">
               Join Spendr and connect with crypto holders looking for businesses like yours.
             </p>
-            <Button size="lg" className="bg-white text-black hover:bg-gray-200">
-              Get Started
+            <Button size="lg" className="bg-white text-black hover:bg-gray-200" asChild>
+              <Link href="/for-businesses/apply">Get Started</Link>
             </Button>
           </div>
         </div>
@@ -129,8 +129,8 @@ export default function ForBusinessesPage() {
                     <span>Analytics dashboard</span>
                   </li>
                 </ul>
-                <Button size="lg" className="w-full">
-                  Get Started Today
+                <Button size="lg" className="w-full" asChild>
+                  <Link href="/for-businesses/apply">Get Started Today</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -148,8 +148,8 @@ export default function ForBusinessesPage() {
             Join the growing network of businesses embracing the future of payments
           </p>
           <div className="flex gap-4 justify-center">
-            <Button size="lg" className="bg-white text-black hover:bg-gray-200">
-              List Your Business
+            <Button size="lg" className="bg-white text-black hover:bg-gray-200" asChild>
+              <Link href="/for-businesses/apply">List Your Business</Link>
             </Button>
             <Button size="lg" variant="outline" className="border-white text-black bg-white hover:bg-gray-200">
               Contact Sales

@@ -1,6 +1,9 @@
+"use client";
+
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { use } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -23,12 +26,36 @@ import {
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
 
-export default async function BusinessPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const [business, allCryptos] = await Promise.all([
+export default function BusinessPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = use(params);
+  const [business, allCryptos] = use(Promise.all([
     getBusinessBySlug(slug),
     getAllCryptocurrencies()
-  ]);
+  ]));
+
+  const handleShare = async () => {
+    const url = window.location.href;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: business.name,
+          text: `Check out ${business.name} on Spendr!`,
+          url: url,
+        });
+      } catch (err) {
+        console.log('Share canceled');
+      }
+    } else {
+      // Fallback: copy to clipboard
+      try {
+        await navigator.clipboard.writeText(url);
+        alert('Link copied to clipboard!');
+      } catch (err) {
+        console.error('Failed to copy:', err);
+      }
+    }
+  };
 
   if (!business) {
     notFound();
@@ -70,6 +97,7 @@ export default async function BusinessPage({ params }: { params: Promise<{ slug:
           <Button 
             variant="ghost" 
             className="bg-black/50 backdrop-blur-sm text-white hover:bg-black/70 border border-white/20"
+            onClick={handleShare}
           >
             <Share2 className="h-4 w-4" />
           </Button>
