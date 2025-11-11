@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -20,9 +19,6 @@ import {
   Navigation,
   Share2
 } from "lucide-react";
-
-const Map = dynamic(() => import("react-map-gl").then(mod => mod.default), { ssr: false });
-const Marker = dynamic(() => import("react-map-gl").then(mod => mod.Marker), { ssr: false });
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -210,32 +206,6 @@ export default async function BusinessPage({ params }: { params: Promise<{ slug:
               </>
             )}
 
-            {/* Map Embed */}
-            <Separator className="bg-gray-800" />
-            <div>
-              <h2 className="text-2xl font-bold text-white mb-4">Location</h2>
-              <div className="h-[300px] rounded-xl overflow-hidden border border-gray-800">
-                <Map
-                  mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN || 'pk.example'}
-                  initialViewState={{
-                    longitude: business.location.coordinates.lng,
-                    latitude: business.location.coordinates.lat,
-                    zoom: 14,
-                  }}
-                  style={{ width: '100%', height: '100%' }}
-                  mapStyle="mapbox://styles/mapbox/dark-v11"
-                >
-                  <Marker
-                    longitude={business.location.coordinates.lng}
-                    latitude={business.location.coordinates.lat}
-                  >
-                    <div className="w-8 h-8 bg-black border-2 border-white rounded-full flex items-center justify-center">
-                      <span className="text-white font-bold italic" style={{ fontFamily: 'Playfair Display, serif' }}>S</span>
-                    </div>
-                  </Marker>
-                </Map>
-              </div>
-            </div>
           </div>
 
           {/* Sidebar */}
