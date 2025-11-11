@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { BusinessCardEnhanced } from "@/components/BusinessCardEnhanced";
-import { BusinessGlobe } from "@/components/BusinessGlobe";
+import { BusinessMap } from "@/components/BusinessMap";
 import { getAllBusinesses } from "@/lib/supabase-queries";
 import { ArrowRight, MapPin } from "lucide-react";
 import { BeamsBackground } from "@/components/ui/beams-background";
@@ -74,15 +74,15 @@ export default function Home() {
                 </div>
               </motion.div>
 
-              {/* Right Side - Globe */}
+              {/* Right Side - Map */}
               <motion.div
                 className="hidden lg:block"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
               >
-                <div className="h-[600px] flex items-center justify-center">
-                  <BusinessGlobe businesses={allBusinesses} />
+                <div className="h-[600px]">
+                  <BusinessMap businesses={allBusinesses} />
                 </div>
               </motion.div>
             </div>
