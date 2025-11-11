@@ -27,7 +27,7 @@ export const BusinessCardEnhanced = React.forwardRef<HTMLAnchorElement, Business
         <Link
           ref={ref}
           href={`/business/${business.slug}`}
-          className="relative block h-[480px] rounded-2xl overflow-hidden group"
+          className="relative block h-[480px] rounded-2xl overflow-hidden group border border-gray-800 shadow-lg shadow-black/20"
         >
           {/* Background Image */}
           <div className="absolute inset-0 w-full h-3/5">
