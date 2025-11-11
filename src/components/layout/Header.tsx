@@ -10,8 +10,8 @@ export function Header() {
         {/* Mobile Menu Button - Only on mobile */}
         <MobileMenuButton />
         
-        {/* Logo - Hidden on mobile */}
-        <Link href="/" className="hidden md:flex items-center">
+        {/* Logo - Shows on both mobile and desktop */}
+        <Link href="/" className="flex items-center">
           <Image 
             src="/spendr-logo.png" 
             alt="Spendr" 
