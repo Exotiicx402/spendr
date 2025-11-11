@@ -19,16 +19,14 @@ export const BusinessCardEnhanced = React.forwardRef<HTMLAnchorElement, Business
     const cryptoSymbols = ['BTC', 'ETH', 'USDC', 'USDT', 'SOL'].slice(0, Math.min(3, business.acceptedCryptos.length));
 
     return (
-      <motion.div
-        className={cn("flex-shrink-0 w-full", className)}
-        whileHover={{ y: -8 }}
-        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      <Link
+        ref={ref}
+        href={`/business/${business.slug}`}
+        className={cn(
+          "relative block h-[480px] rounded-2xl overflow-hidden group border border-gray-800 shadow-lg shadow-black/20 transition-transform hover:-translate-y-2",
+          className
+        )}
       >
-        <Link
-          ref={ref}
-          href={`/business/${business.slug}`}
-          className="relative block h-[480px] rounded-2xl overflow-hidden group border border-gray-800 shadow-lg shadow-black/20"
-        >
           {/* Background Image */}
           <div className="absolute inset-0 w-full h-3/5">
             <Image
@@ -105,7 +103,6 @@ export const BusinessCardEnhanced = React.forwardRef<HTMLAnchorElement, Business
             </div>
           </div>
         </Link>
-      </motion.div>
     );
   }
 );
