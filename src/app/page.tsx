@@ -51,8 +51,8 @@ export default function Home() {
                 transition={{ duration: 0.8 }}
               >
                 <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8 md:p-12 shadow-2xl">
-                  <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-white tracking-tight">
-                    Crypto spent beautifully.
+                  <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold italic mb-6 text-white tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
+                    Crypto spent <span className="font-normal">beautifully.</span>
                   </h1>
                   <p className="text-lg md:text-xl text-gray-200 mb-8 leading-relaxed">
                     Discover businesses near you that accept cryptocurrency payments.
